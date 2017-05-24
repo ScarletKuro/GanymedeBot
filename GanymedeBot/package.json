@@ -1,0 +1,34 @@
+{
+  "name": "ganymede",
+  "version": "1.0.0",
+  "description": "The best bot ever",
+  "main": "app.js",
+  "license": "ISC",
+  "scripts": {
+    "lint": "tslint './src/**/*.ts'"
+  },
+  "author": {
+    "name": "Kym"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "yamdbf",
+    "node"
+  ],
+  "dependencies": {
+    "ytdl-core": "^0.14.1",
+    "yamdbf": "github:zajrik/yamdbf",
+    "yamdbf-addon-dm-manager": "github:zajrik/yamdbf-addon-dm-manager"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.73",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-sourcemaps": "^2.4.0",
+    "gulp-tslint": "^8.0.0",
+    "gulp-typescript": "^3.1.6",
+    "tslint": "^5.2.0",
+    "typescript": "^2.3.2"
+  }
+}

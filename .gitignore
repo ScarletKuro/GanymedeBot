@@ -1,3 +1,9 @@
-# Node.
-node_modules
-npm-debug.log
+/node_modules/*
+/bin/*
+/pkg/*
+config.json
+npm-debug*
+/test/storage
+/storage/*
+test_*.js
+

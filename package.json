@@ -2,10 +2,12 @@
   "name": "ganymede",
   "version": "1.0.0",
   "description": "The best bot ever",
-  "main": "app.js",
-  "license": "ISC",
+  "main": "bin/index",
+  "typings": "bin/index.d.ts",
+  "license": "MIT",
   "scripts": {
-    "lint": "tslint './src/**/*.ts'"
+	"build": "gulp",
+    "lint": "gulp lint"
   },
   "author": {
     "name": "Kym"
@@ -17,18 +19,17 @@
     "node"
   ],
   "dependencies": {
-    "ytdl-core": "^0.14.1",
     "yamdbf": "github:zajrik/yamdbf",
     "yamdbf-addon-dm-manager": "github:zajrik/yamdbf-addon-dm-manager"
   },
   "devDependencies": {
-    "@types/node": "^6.0.73",
+    "@types/node": "^7.0.8",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
-    "gulp-sourcemaps": "^2.4.0",
-    "gulp-tslint": "^8.0.0",
-    "gulp-typescript": "^3.1.6",
-    "tslint": "^5.2.0",
-    "typescript": "^2.3.2"
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-tslint": "^7.1.0",
+    "gulp-typescript": "^3.1.5",
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.1"
   }
 }

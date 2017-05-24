@@ -1,19 +1,7 @@
-.vs/*
-GanymedeBot/**/*.js
-GanymedeBot/**/*.js.map
-GanymedeBot/obj/*
-GanymedeBot/config.json
-GanymedeBot/node_modules/*
-GanymedeBot/bin/*
-GanymedeBot/npm-debug*
-GanymedeBot/pkg/*
-GanymedeBot/storage/*
-GanymedeBot/typings/*
-GanymedeBot/.vscode/*
-GanymedeBot/yarn*
-GanymedeBot/Test.ts
-GanymedeBot/old_storage/*
-GanymedeBot/migration*
-
-# Whitelist some files
-!GanymedeBot/gulpfile.js
+/node_modules/*
+/bin/*
+/pkg/*
+config.json
+npm-debug*
+/test/storage
+test_*.js

@@ -1,19 +1,18 @@
-﻿import { Collection, RichEmbed, TextChannel } from "discord.js";
-import { Client, Command, GuildStorage, Message, Middleware, CommandDecorators } from "yamdbf";
+﻿import { Client, Command, Message, Middleware, CommandDecorators } from 'yamdbf';
 
-const { resolveArgs, expect } = Middleware;
+const { expect } = Middleware;
 const { using } = CommandDecorators;
 
 export default class Quote extends Command<Client>
 {
     public constructor(client: Client) {
         super(client, {
-            name: "quote",
-            description: "Helps to quote someone message",
-            aliases: ["q"],
+            name: 'quote',
+            description: 'Helps to quote someone message',
+            aliases: ['q'],
             usage: `<prefix>quote <messageid> <messagecontent>`,
-            extraHelp: "",
-            group: "base"
+            extraHelp: '',
+            group: 'base'
         });
     }
 
@@ -24,11 +23,10 @@ export default class Quote extends Command<Client>
             { limit: 100, before: message.id })).filter((a: Message) => a.id === messageid).array();
 
         if (messages.length === 0) {
-            //message.delete();
             message.reply("the message with this ID wasn't found");
         } else {
             
-            let quotedMessage = messages[0];
+            let quotedMessage: Message = messages[0];
             message.channel.send({
                 embed: {
                     author: {
@@ -37,7 +35,9 @@ export default class Quote extends Command<Client>
                     },
                     description: quotedMessage.content
                 }
-            }).then(m => message.channel.send(messagecontent.join(" ")));
+            }).then(m => message.channel.send(messagecontent.join(' ')));
         }
+
+        message.delete();
     }
 }

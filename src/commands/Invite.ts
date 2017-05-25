@@ -1,7 +1,7 @@
 import { RichEmbed } from 'discord.js';
 import { Client, Command, Message } from 'yamdbf';
 
-export default class Patch extends Command<Client>
+export default class Invite extends Command<Client>
 {
     public constructor(client: Client) {
         super(client, {

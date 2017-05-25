@@ -1,8 +1,8 @@
 import { Client, ListenerUtil, LogLevel } from 'yamdbf';
 import { TextChannel, RichEmbed, Message, Guild } from 'discord.js';
 
-const config: any = require('../config.json');
-const pkg: any = require('../package.json');
+const config: any = require('../../config.json');
+const pkg: any = require('../../package.json');
 
 const { on, once } = ListenerUtil;
 

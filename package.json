@@ -6,7 +6,7 @@
   "typings": "bin/index.d.ts",
   "license": "MIT",
   "scripts": {
-	"build": "gulp",
+    "build": "gulp",
     "lint": "gulp lint"
   },
   "author": {

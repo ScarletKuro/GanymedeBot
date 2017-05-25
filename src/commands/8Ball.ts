@@ -30,7 +30,7 @@ export default class EightBall extends Command<Client>
     public constructor(client: Client) {
         super(client, {
             name: '8ball',
-            description: 'Let the 8ball preict your future',
+            description: 'Let the 8ball predict your future',
             aliases: ['8'],
             usage: `<prefix>8ball`,
             extraHelp: '',

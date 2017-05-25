@@ -4,7 +4,7 @@
 	"version": "0.1.0",
 	"command": "gulp",
 	"isShellCommand": true,
-	"args": ["lint", "build"],
+	"args": ["build"],
 	"tasks": [
 		{
 			"taskName": "default",
@@ -12,7 +12,6 @@
 			"isBuildCommand": true,
 			"isBackground": false,
 			"problemMatcher": [
-				"$lessCompile",
 				"$tsc"
 			]
 		}

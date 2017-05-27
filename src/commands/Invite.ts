@@ -17,10 +17,10 @@ export default class Invite extends Command<Client>
     public async action(message: Message, args: string[]): Promise<any> {
         let embed: RichEmbed = new RichEmbed();
 
-        embed.addField('Invite Link', 'Invite bot to your server')
-            .setColor(0x33FF3C)
-            .setThumbnail(message.author.avatarURL)
-            .setDescription('[Invite me!](https://discordapp.com/oauth2/authorize?client_id=314440393062219777&scope=bot&permissions=2146958591)');
+        embed.setAuthor(this.client.name)
+            .setColor(0xffff00)
+            .setThumbnail('https://vignette2.wikia.nocookie.net/overwatch/images/d/d2/Bastion_Spray_-_Ganymede.png')
+            .setDescription(`[Click](https://discordapp.com/oauth2/authorize?client_id=${this.client.user.id}&scope=bot&permissions=2146958591) here to invite me to your server.`);
         message.channel.send({ embed: embed });
     }
 }

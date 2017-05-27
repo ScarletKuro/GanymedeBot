@@ -19,11 +19,15 @@
     "node"
   ],
   "dependencies": {
+    "request-promise": "^4.2.1",
+    "request": "^2.81.0",
     "yamdbf": "github:zajrik/yamdbf",
+    "canvas": "automattic/node-canvas",
     "yamdbf-addon-dm-manager": "github:zajrik/yamdbf-addon-dm-manager"
   },
   "devDependencies": {
     "@types/node": "^7.0.8",
+    "@types/request-promise": "^4.1.33",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.4.1",
@@ -31,5 +35,8 @@
     "gulp-typescript": "^3.1.5",
     "tslint": "^4.5.1",
     "typescript": "^2.2.1"
+  },
+  "engines": {
+    "node": ">=7.6.0"
   }
 }

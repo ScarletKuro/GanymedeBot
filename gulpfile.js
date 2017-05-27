@@ -29,6 +29,11 @@ gulp.task('build', () => {
 
 	tsCompile.pipe(gulp.dest('bin/'));
 
+	gulp.src('./src/**/*.png')
+		.pipe(gulp.dest('bin/'));
+	gulp.src('./src/**/*.ttf')
+		.pipe(gulp.dest('bin/'));
+
 	gulp.src('./src/**/*.js')
 		.pipe(gulp.dest('bin/'));
 

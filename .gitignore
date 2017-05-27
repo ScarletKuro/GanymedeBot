@@ -1,4 +1,7 @@
 /node_modules/*
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
 /bin/*
 /pkg/*
 config.json
@@ -6,4 +9,5 @@ npm-debug*
 /test/storage
 /storage/*
 test_*.js
+obj/*
 

@@ -11,7 +11,7 @@
 			"cwd": "${workspaceRoot}/bin",
 			"program": "${workspaceRoot}/bin/index.js",
 			"protocol": "auto",
-			"outFiles": [],
+			"outFiles": ["${workspaceRoot}/bin/*.js"],
 			"preLaunchTask": "default"
 		},
 		{

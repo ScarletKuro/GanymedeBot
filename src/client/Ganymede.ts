@@ -39,20 +39,6 @@ export class Ganymede extends  Client {
         
     }
 
-    @on('command')
-    private _logCommand(name: string, args: any, execTime: number, message: Message): Promise<Message> {
-        const logChannel: TextChannel = <TextChannel> this.channels.get(this.config.commands);
-        const embed: RichEmbed = new RichEmbed()
-            .setColor(11854048)
-            .setAuthor(`${message.author.tag} (${message.author.id})`, message.author.avatarURL);
-        if (message.guild) embed.addField('Guild', message.guild.name, true);
-        embed.addField('Exec time', `${execTime.toFixed(2)}ms`, true)
-            .addField('Command content', message.content)
-            .setFooter(message.channel.type.toUpperCase(), this.user.avatarURL)
-            .setTimestamp();
-        return logChannel.send({ embed: embed });
-    }
-
     @on('guildCreate')
     @on('guildDelete', false)
     private _logGuild(guild: Guild, joined: boolean = true): Promise<Message> {

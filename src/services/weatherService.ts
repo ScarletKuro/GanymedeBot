@@ -18,14 +18,14 @@ export async function pollWeatherData(cityName: String): Promise<WeatherData> {
     uri: forecastUrl,
     json: true
   });
-  
+
   return Promise.all([currentPromise, forecastPromise]).then(
     async jsons => { 
-      let resolved: WeatherData = new WeatherData(jsons[0], jsons[1]);
-      let data: TimeData = await pollTimeData(jsons[0].coord.lat, jsons[0].coord.lon);
-      resolved.currenTime = data.time;
-      return Promise.resolve(resolved); }
-    );
+      let weatherData: WeatherData = new WeatherData(jsons[0], jsons[1]);
+      let timeData: TimeData = await pollTimeData(weatherData.coord.lat, weatherData.coord.lon);
+      weatherData.currenTime = timeData.time;
+      return Promise.resolve(weatherData); 
+    });
 }
 
 export class WeatherData {
@@ -59,9 +59,11 @@ export class WeatherData {
   public sunriseTime: Date;
   public sunsetTime: Date;
   public currenTime: Date;
+  public coord: { lon: number, lat: number };
 
   public constructor(current: any, forecast: any) {
     this.currenTime = new Date(current.dt * 1000);
+    this.coord = { lon: current.coord.lon, lat: current.coord.lat };
     this.cityName = forecast.city.name;
     this.countryName = forecast.city.country;
     this.sunriseTime = new Date(current.sys.sunrise * 1000);

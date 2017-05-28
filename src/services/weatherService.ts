@@ -1,26 +1,32 @@
-// Replace with your API key for OpenWeatherMap, see http://openweathermap.org/appid
 import * as request from 'request-promise';
+import { WeatherDatum } from '../model/openWeatherModel';
+import { pollTimeData, TimeData } from './timeService';
 
 const API_KEY: string = '42cd627dd60debf25a5739e50a217d74';
 
-export function pollWeatherData(cityName: String): Promise<WeatherData> {
+export async function pollWeatherData(cityName: String): Promise<WeatherData> {
   cityName = cityName.trim();
   let forecastUrl: string = `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&type=like&units=metric&APPID=${API_KEY}`;
   let currentUrl: string = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&type=like&units=metric&APPID=${API_KEY}`;
 
   let currentPromise: request.RequestPromise = request({
-			uri: currentUrl,
-			json: true
-		});
+    uri: currentUrl,
+    json: true
+  });
 
   let forecastPromise: request.RequestPromise = request({
-			uri: forecastUrl,
-			json: true
-		});
+    uri: forecastUrl,
+    json: true
+  });
 
-  return Promise.all([currentPromise, forecastPromise]).then(jsons => Promise.resolve(new WeatherData(jsons[0], jsons[1])));
+  return Promise.all([currentPromise, forecastPromise]).then(
+    async jsons => { 
+      let weatherData: WeatherData = new WeatherData(jsons[0], jsons[1]);
+      let timeData: TimeData = await pollTimeData(weatherData.coord.lat, weatherData.coord.lon);
+      weatherData.currenTime = timeData.time;
+      return Promise.resolve(weatherData); 
+    });
 }
-
 
 export class WeatherData {
 
@@ -52,8 +58,12 @@ export class WeatherData {
   public days: WeatherDatum[][];
   public sunriseTime: Date;
   public sunsetTime: Date;
+  public currenTime: Date;
+  public coord: { lon: number, lat: number };
 
   public constructor(current: any, forecast: any) {
+    this.currenTime = new Date(current.dt * 1000);
+    this.coord = { lon: current.coord.lon, lat: current.coord.lat };
     this.cityName = forecast.city.name;
     this.countryName = forecast.city.country;
     this.sunriseTime = new Date(current.sys.sunrise * 1000);
@@ -61,7 +71,7 @@ export class WeatherData {
     this.list = [this.parseDatum(current)].concat(forecast.list.map(this.parseDatum));
     this.days = [];
     let day: any = this.list[0].date.getDate();
-    let matchDay: any = function(datum: any): boolean { return datum.date.getDate() === day; };
+    let matchDay: any = function (datum: any): boolean { return datum.date.getDate() === day; };
     while (this.list.some(matchDay)) {
       this.days.push(this.list.filter(matchDay));
       day++;
@@ -115,19 +125,4 @@ export class WeatherData {
       snow: datum.snow ? datum.snow.hasOwnProperty('3h') ? datum.snow['3h'] : 0 : 0
     };
   }
-}
-
-export interface WeatherDatum {
-  date: Date;
-  weather: string; // coarse description
-  weatherDetailed: string; // detailed description
-  weatherIcon: string; // iconID for weather icon
-  temperature: number;
-  pressure: number;
-  humidity: number;
-  cloudCoverage: number; // percent
-  windSpeed: number; // meter per second
-  windDirection: number; // degrees (meterological)
-  rain: number; // volume last 3h in mm
-  snow: number; // volume last 3h
 }

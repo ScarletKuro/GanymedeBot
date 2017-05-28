@@ -4,26 +4,22 @@ import * as path from 'path';
 const Canvas: any = require('canvas');
 const Image: any = Canvas.Image;
 
+const SPRITE_HEIGHT = 45;
+const SPRITE_WIDTH = 26.25;
 
-export default class CanvasClock {
+export class CanvasClock {
     private readonly time: Date;
     private readonly context: any;
     private readonly height: number;
     private readonly width: number;
     private readonly clockface: { src: Buffer } = new Image();
-    private readonly digitheight: number;
-    private readonly digitwidth: number;
     private xPositions: Array<number>;
 
     public constructor(time: Date, ctx: any, width: number, height: number, hhmmgapsize: number) {
-        //let iHHMMGap: number = hhmmgapsize;
-
         this.time = time;
         this.context = ctx;
         this.height = height;
         this.width = width;
-        this.digitheight = 45; //740; // 1200;
-        this.digitwidth = 26.25;
         this.clockface.src = this.loadAsset('flip_clock.png');
 
         this.xPositions = Array(this.width * 0,
@@ -31,13 +27,13 @@ export default class CanvasClock {
             (this.width * 2) + hhmmgapsize,
             (this.width * 3) + hhmmgapsize);
     }
+
     private drawHHMMDigit(time: any, unit: number): void {
-        //this.context.scale(1, 1);
         this.context.imageSmoothingEnabled = true;
         this.context.filter = 'bilinear';
         this.context.patternQuality = 'bilinear';
         this.context.antialias = 'subpixel';
-        this.context.drawImage(this.clockface, time.substr(unit, 1) * this.digitwidth, 0, this.digitwidth, this.digitheight, this.xPositions[unit], 0, this.width, this.height);
+        this.context.drawImage(this.clockface, time.substr(unit, 1) * SPRITE_WIDTH, 0, SPRITE_WIDTH, SPRITE_HEIGHT, this.xPositions[unit], 0, this.width, this.height);
     }
 
     public draw(x: number, y: number): void {
@@ -49,7 +45,6 @@ export default class CanvasClock {
         for (let iDigit: number = 0; iDigit < 4; iDigit++) {
             this.drawHHMMDigit(timestring, iDigit);
         }
-
 
         this.context.restore();
     }

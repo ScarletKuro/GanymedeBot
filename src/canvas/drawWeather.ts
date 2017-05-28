@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { WeatherData, WeatherDatum } from './weatherService';
+import { WeatherData, WeatherDatum } from '../services/weatherService';
 import { CanvasTable } from './canvasTable';
 import { getCountryName } from '../data/countryISO';
+import CanvasClock from "./canvasClock";
 
 const Canvas: any = require('canvas');
 const Image: any = Canvas.Image;
@@ -29,6 +30,7 @@ export default class DrawWeather {
         this.currentWeather = properties.list[0];
         this.iconSize = { height: 60, width: 60 };
         this.canvas = new Canvas(this.width, this.height);
+        //this.canvas = new Canvas(1200, 451);
     }
 
     public draw(): void {
@@ -38,6 +40,16 @@ export default class DrawWeather {
         this.drawWeatherTimeline(ctx);
         this.drawText(ctx);
         this.drawDetails(ctx);
+        this.drawClock(ctx);
+    }
+
+    public drawClock(ctx: any): void {
+        let hhmmgapsize: number = 6;
+        let offset: {x: number, y: number } = { x: 10, y: 10 };
+        let size: { width: number, height: number } = { width: 26.25, height: 45 };
+        let pos: { x: number, y: number } = { x: this.width - size. width * 4 - offset.y - hhmmgapsize, y: 0 + offset.x };
+        const clock: CanvasClock = new CanvasClock(this.currentWeather.date, ctx, size.width, size.height, hhmmgapsize);
+        clock.draw(pos.x, pos.y);
     }
 
     public drawWeatherTimeline(ctx: any): void {

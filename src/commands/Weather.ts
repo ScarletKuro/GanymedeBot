@@ -1,6 +1,6 @@
 import { Client, Command, Message } from 'yamdbf';
 import { pollWeatherData, WeatherData } from '../services/weatherService';
-import DrawWeather from '../services/DrawWeather';
+import DrawWeather from '../canvas/DrawWeather';
 
 export default class Weather extends Command<Client>
 {

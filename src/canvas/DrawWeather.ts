@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { WeatherData } from '../services/weatherService';
-import { CanvasTable } from './canvasTable';
-import { getCountryName } from '../data/countryISO';
-import { CanvasClock } from './canvasClock';
-import { WeatherDatum } from '../model/openWeatherModel';
+import { WeatherData } from '../services/WeatherService';
+import { CanvasTable } from './CanvasTable';
+import { getCountryName } from '../data/CountryISO';
+import { CanvasClock } from './CanvasClock';
+import { WeatherDatum } from '../model/OpenWeatherModel';
 
 const Canvas: any = require('canvas');
 const Image: any = Canvas.Image;

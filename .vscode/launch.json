@@ -9,16 +9,25 @@
 			"request": "launch",
 			"name": "Launch Program",
 			"cwd": "${workspaceRoot}/bin",
-			"program": "${workspaceRoot}/bin/index.js",
-			"protocol": "auto",
-			"outFiles": ["${workspaceRoot}/bin/*.js"],
-			"preLaunchTask": "default"
+			"program": "${workspaceRoot}/src/index.ts",
+			"protocol": "inspector",
+			"stopOnEntry": false,
+			"sourceMaps": true,
+			"outFiles": [
+				"${workspaceRoot}/bin/**/*.js"
+			],
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"console": "integratedTerminal",
+			"preLaunchTask": "build"
 		},
 		{
 			"type": "node",
 			"request": "attach",
 			"name": "Attach to Process",
 			"port": 5858,
+			"sourceMaps": true,
 			"outFiles": []
 		}
 	]

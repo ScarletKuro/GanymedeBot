@@ -10,4 +10,5 @@ npm-debug*
 /storage/*
 test_*.js
 obj/*
+src/storage/*
 

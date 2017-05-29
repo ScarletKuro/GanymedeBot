@@ -1,30 +1,44 @@
 import * as request from 'request-promise';
-import { WeatherDatum } from '../model/openWeatherModel';
-import { pollTimeData, TimeData } from './timeService';
+import { WeatherDatum } from '../model/OpenWeatherModel';
+import { pollTimeData, TimeData } from './TimeService';
 
 const API_KEY: string = '42cd627dd60debf25a5739e50a217d74';
 
 export async function pollWeatherData(cityName: String): Promise<WeatherData> {
   cityName = cityName.trim();
-  let forecastUrl: string = `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&type=like&units=metric&APPID=${API_KEY}`;
-  let currentUrl: string = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&type=like&units=metric&APPID=${API_KEY}`;
+  let forecastUrl: string = 'http://api.openweathermap.org/data/2.5/forecast'; // ?q=${cityName}&type=like&units=metric&APPID=${API_KEY}`;
+  let currentUrl: string = 'http://api.openweathermap.org/data/2.5/weather'; // ?q=${cityName}&type=like&units=metric&APPID=${API_KEY}`;
 
   let currentPromise: request.RequestPromise = request({
+    method: 'GET',
     uri: currentUrl,
-    json: true
+    json: true,
+    qs: {
+      type: 'like',
+      units: 'metric',
+      q: cityName,
+      appid: API_KEY
+    }
   });
 
   let forecastPromise: request.RequestPromise = request({
+    method: 'GET',
     uri: forecastUrl,
-    json: true
+    json: true,
+    qs: {
+      type: 'like',
+      units: 'metric',
+      q: cityName,
+      appid: API_KEY
+    }
   });
 
   return Promise.all([currentPromise, forecastPromise]).then(
-    async jsons => { 
+    async jsons => {
       let weatherData: WeatherData = new WeatherData(jsons[0], jsons[1]);
       let timeData: TimeData = await pollTimeData(weatherData.coord.lat, weatherData.coord.lon);
       weatherData.currenTime = timeData.time;
-      return Promise.resolve(weatherData); 
+      return Promise.resolve(weatherData);
     });
 }
 
@@ -71,7 +85,7 @@ export class WeatherData {
     this.list = [this.parseDatum(current)].concat(forecast.list.map(this.parseDatum));
     this.days = [];
     let day: any = this.list[0].date.getDate();
-    let matchDay: any = function (datum: any): boolean { return datum.date.getDate() === day; };
+    let matchDay: any = (datum: any): boolean => datum.date.getDate() === day;
     while (this.list.some(matchDay)) {
       this.days.push(this.list.filter(matchDay));
       day++;
@@ -105,7 +119,7 @@ export class WeatherData {
       windSpeed: previous.windSpeed + a * (next.windSpeed - previous.windSpeed),
       windDirection: previous.windDirection + a * (next.windDirection - previous.windDirection),
       rain: previous.rain + a * (next.rain - previous.rain),
-      snow: previous.snow + a * (next.snow - previous.snow),
+      snow: previous.snow + a * (next.snow - previous.snow)
     };
   }
 

@@ -6,12 +6,12 @@ const UI_TEXT_COLOR: string = 'rgb(0, 0, 0)';
 
 export class CanvasTable {
   private items: any;
-  private rows: number;
-  private cols: number;
-  private itemHeight: number;
-  private itemWidth: number;
-  private element: { width: number, height: number };
-  private context: any;
+  private readonly rows: number;
+  private readonly cols: number;
+  private readonly itemHeight: number;
+  private readonly itemWidth: number;
+  private readonly element: { width: number, height: number };
+  private readonly context: any;
 
   public constructor(ctx: any, itemWidth: number, itemHeight: number, cols: number, rows: number) {
     this.element = { width: itemWidth * cols, height: itemHeight * rows };

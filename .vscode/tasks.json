@@ -4,11 +4,12 @@
 	"version": "0.1.0",
 	"command": "gulp",
 	"isShellCommand": true,
-	"args": ["build"],
+	"showOutput": "always",
+	"args": ["--no-color"],
 	"tasks": [
 		{
-			"taskName": "default",
-			"args": [],
+			"taskName": "build",
+			"args": ["--app"],
 			"isBuildCommand": true,
 			"isBackground": false,
 			"problemMatcher": [

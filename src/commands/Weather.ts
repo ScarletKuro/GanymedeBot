@@ -1,6 +1,8 @@
 import { Client, Command, Message } from 'yamdbf';
-import { pollWeatherData, WeatherData } from '../services/weatherService';
+import { pollWeatherData, WeatherData } from '../services/WeatherService';
 import DrawWeather from '../canvas/DrawWeather';
+import { ApiException } from '../model/ApiException';
+import { RichEmbed } from 'discord.js';
 
 export default class Weather extends Command<Client>
 {
@@ -15,12 +17,36 @@ export default class Weather extends Command<Client>
         });
     }
 
-    public async action(message: Message, args: string[]): Promise<any> 
-    {
-		const location: string = args.join(' ');
-		const service: WeatherData = await pollWeatherData(location);
-		const graph: DrawWeather = new DrawWeather(service, 400, 180);
-		graph.draw();
-		return message.channel.send({ files: [{ attachment: graph.canvas.toBuffer(), name: location.concat('.png') }] });
+    public async action(message: Message, args: string[]): Promise<any> {
+        const location: string = args.join(' ');
+        pollWeatherData(location).then(function (result: WeatherData): Promise<Message> {
+            const graph: DrawWeather = new DrawWeather(result, 400, 180);
+            graph.draw();
+            return message.channel.send({ files: [{ attachment: graph.canvas.toBuffer(), name: location.concat('.png') }] });
+        }).catch(function (ex: Error): Promise<Message> {
+            let embed: RichEmbed = new RichEmbed();
+            embed
+                .setColor(0xff0000)
+                .setThumbnail('http://www.freeiconspng.com/uploads/error-icon-4.png')
+                .setTimestamp();
+
+            if (ex instanceof ApiException) {
+                embed.setDescription(ex.message)
+                    .setAuthor('Api Exception');
+                return message.channel.send({ embed: embed });
+            }
+            else {
+                console.log(ex.message);
+                embed.setDescription('Error durring getting data')
+                    .setAuthor('Unhandled Exception');
+                return message.channel.send({ embed: embed });
+            }
+
+        });
+
+        //const service: WeatherData = await pollWeatherData(location);
+        //const graph: DrawWeather = new DrawWeather(service, 400, 180);
+        //graph.draw();
+        //return message.channel.send({ files: [{ attachment: graph.canvas.toBuffer(), name: location.concat('.png') }] });
     }
 }

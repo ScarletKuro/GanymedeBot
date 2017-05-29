@@ -4,8 +4,8 @@ import * as path from 'path';
 const Canvas: any = require('canvas');
 const Image: any = Canvas.Image;
 
-const SPRITE_HEIGHT = 45;
-const SPRITE_WIDTH = 26.25;
+const SPRITE_HEIGHT: number = 45;
+const SPRITE_WIDTH: number = 26.25;
 
 export class CanvasClock {
     private readonly time: Date;
@@ -13,7 +13,7 @@ export class CanvasClock {
     private readonly height: number;
     private readonly width: number;
     private readonly clockface: { src: Buffer } = new Image();
-    private xPositions: Array<number>;
+    private readonly positions: Array<number>;
 
     public constructor(time: Date, ctx: any, width: number, height: number, hhmmgapsize: number) {
         this.time = time;
@@ -22,7 +22,7 @@ export class CanvasClock {
         this.width = width;
         this.clockface.src = this.loadAsset('flip_clock.png');
 
-        this.xPositions = Array(this.width * 0,
+        this.positions = Array(this.width * 0,
             this.width * 1,
             (this.width * 2) + hhmmgapsize,
             (this.width * 3) + hhmmgapsize);
@@ -33,7 +33,7 @@ export class CanvasClock {
         this.context.filter = 'bilinear';
         this.context.patternQuality = 'bilinear';
         this.context.antialias = 'subpixel';
-        this.context.drawImage(this.clockface, time.substr(unit, 1) * SPRITE_WIDTH, 0, SPRITE_WIDTH, SPRITE_HEIGHT, this.xPositions[unit], 0, this.width, this.height);
+        this.context.drawImage(this.clockface, time.substr(unit, 1) * SPRITE_WIDTH, 0, SPRITE_WIDTH, SPRITE_HEIGHT, this.positions[unit], 0, this.width, this.height);
     }
 
     public draw(x: number, y: number): void {

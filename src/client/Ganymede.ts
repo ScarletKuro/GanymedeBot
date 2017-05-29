@@ -38,16 +38,4 @@ export class Ganymede extends  Client {
     private async _onClientReady(): Promise<void> {
         
     }
-
-    @on('guildCreate')
-    @on('guildDelete', false)
-    private _logGuild(guild: Guild, joined: boolean = true): Promise<Message> {
-        const logChannel: TextChannel = <TextChannel> this.channels.get(this.config.guilds);
-        const embed: RichEmbed = new RichEmbed()
-            .setColor(joined ? 8450847 : 13091073)
-            .setAuthor(`${guild.name} (${guild.id})`, guild.iconURL)
-            .setFooter(joined ? 'Welcome to the Animosity server.' : 'Left guild')
-            .setTimestamp();
-        return logChannel.sendEmbed(embed);
-    }
 }

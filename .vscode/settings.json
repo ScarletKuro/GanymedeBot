@@ -1,9 +1,14 @@
 {
     "files.exclude": {
         "**/.git": true,
+        "**/bin": true,
+        "**/node_modules": true,
+        "**/obj": true,
         "**/.DS_Store": true,
         "**/*.js.map": true,
+        "**/*.d.ts": {"when": "$(basename).ts"},
         "**/*.js": {"when": "$(basename).ts"}
+        
     },
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 1000

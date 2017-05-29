@@ -9,18 +9,9 @@ const path = require('path');
 const project = gulp_ts.createProject('tsconfig.json');
 const linter = tslint.Linter.createProgram('tsconfig.json');
 
-gulp.task('default', ['build']);
-
-gulp.task('lint', () => {
-	gulp.src('./src/**/*.ts')
-		.pipe(gulp_tslint({
-			configuration: 'tslint.json',
-			formatter: 'prose',
-			program: linter
-		}))
-		.pipe(gulp_tslint.report());
-})
-
+/*
+ This task will transpile the solution suing src/main.ts as the entry point
+*/
 gulp.task('build', () => {
 	del.sync(['./bin/**/*.*']);
 	const tsCompile = gulp.src('./src/**/*.ts')
@@ -41,8 +32,31 @@ gulp.task('build', () => {
 		.pipe(gulp.dest('bin/'));
 
 	return tsCompile.js
-		.pipe(gulp_sourcemaps.write({
-			sourceRoot: file => path.relative(path.join(file.cwd, file.path), file.base)
-		}))
+		.pipe(gulp_sourcemaps.write(".", { sourceRoot: '../src' }))
 		.pipe(gulp.dest('bin/'));
+});
+
+
+/*
+ This task will "run" the app using src/index.ts as the entry point
+*/
+gulp.task('run', ['build'], function (cb) {
+	exec('node bin/index.js', function (err, stdout, stderr) {
+		console.log(stdout);
+		console.log(stderr);
+		cb(err);
+	});
+});
+
+/*
+ Provide linting support
+*/
+gulp.task('lint', () => {
+	gulp.src('./src/**/*.ts')
+		.pipe(gulp_tslint({
+			configuration: 'tslint.json',
+			formatter: 'prose',
+			program: linter
+		}))
+		.pipe(gulp_tslint.report());
 });

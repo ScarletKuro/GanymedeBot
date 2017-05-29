@@ -4,7 +4,7 @@ import { WeatherData } from '../services/WeatherService';
 import { CanvasTable } from './CanvasTable';
 import { getCountryName } from '../data/CountryISO';
 import { CanvasClock } from './CanvasClock';
-import { WeatherDatum } from '../model/OpenWeatherModel';
+import { IWeatherDatum } from '../model/OpenWeatherModel';
 
 const Canvas: any = require('canvas');
 const Image: any = Canvas.Image;
@@ -17,7 +17,7 @@ const TIMELINE_FONT_COLOR: string = 'rgb(0, 0, 0)';
 export default class DrawWeather {
     public canvas: any;
     private data: WeatherData;
-    private currentWeather: WeatherDatum;
+    private currentWeather: IWeatherDatum;
     // private dataPoints: WeatherDatum[];
     private width: number;
     private height: number;
@@ -60,7 +60,7 @@ export default class DrawWeather {
             const iconImage: { src: Buffer } = new Image();
             let day: Date = new Date();
             day.setDate(this.currentWeather.date.getDate() + i + 1);
-            let data: WeatherDatum = this.data.getWeatherAtDate(day);
+            let data: IWeatherDatum = this.data.getWeatherAtDate(day);
             iconImage.src = this.loadAsset('icons', data.weatherIcon.concat('.png'));
             table.insertItem(i, 0, this.getDay(day), iconImage, `${Math.round(data.temperature)}°`);
         }

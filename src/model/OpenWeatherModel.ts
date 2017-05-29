@@ -1,4 +1,4 @@
-export interface WeatherDatum {
+export interface IWeatherDatum {
   date: Date;
   weather: string; // coarse description
   weatherDetailed: string; // detailed description

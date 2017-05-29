@@ -1,13 +1,13 @@
 import * as request from 'request-promise';
-import { WeatherDatum } from '../model/OpenWeatherModel';
+import { IWeatherDatum } from '../model/OpenWeatherModel';
 import { pollTimeData, TimeData } from './TimeService';
 
 const API_KEY: string = '42cd627dd60debf25a5739e50a217d74';
 
 export async function pollWeatherData(cityName: String): Promise<WeatherData> {
   cityName = cityName.trim();
-  let forecastUrl: string = 'http://api.openweathermap.org/data/2.5/forecast'; // ?q=${cityName}&type=like&units=metric&APPID=${API_KEY}`;
-  let currentUrl: string = 'http://api.openweathermap.org/data/2.5/weather'; // ?q=${cityName}&type=like&units=metric&APPID=${API_KEY}`;
+  let forecastUrl: string = 'http://api.openweathermap.org/data/2.5/forecast';
+  let currentUrl: string = 'http://api.openweathermap.org/data/2.5/weather';
 
   let currentPromise: request.RequestPromise = request({
     method: 'GET',
@@ -44,7 +44,7 @@ export async function pollWeatherData(cityName: String): Promise<WeatherData> {
 
 export class WeatherData {
 
-  public static getAverageWeatherDescription(day: WeatherDatum[]): string {
+  public static getAverageWeatherDescription(day: IWeatherDatum[]): string {
     let cloudForecasts: number = day.filter((forecast) => (forecast.weather === 'Clouds')).length;
     let rainForecasts: number = day.filter((forecast) => (forecast.weather === 'Rain')).length;
     let snowForecasts: number = day.filter((forecast) => (forecast.weather === 'Snow')).length;
@@ -68,8 +68,8 @@ export class WeatherData {
 
   public cityName: string;
   public countryName: string;
-  public list: WeatherDatum[];
-  public days: WeatherDatum[][];
+  public list: IWeatherDatum[];
+  public days: IWeatherDatum[][];
   public sunriseTime: Date;
   public sunsetTime: Date;
   public currenTime: Date;
@@ -92,7 +92,7 @@ export class WeatherData {
     }
   }
 
-  public getWeatherAtDate(date: Date): WeatherDatum {
+  public getWeatherAtDate(date: Date): IWeatherDatum {
     if (date < this.list[0].date) {
       return this.list[0];
     }
@@ -104,7 +104,7 @@ export class WeatherData {
     return this.list[this.list.length - 1];
   }
 
-  private linearInterpolate(previous: WeatherDatum, next: WeatherDatum, time: number): WeatherDatum {
+  private linearInterpolate(previous: IWeatherDatum, next: IWeatherDatum, time: number): IWeatherDatum {
     let [prevTime, nextTime] = [previous.date.getTime(), next.date.getTime()];
     let a: number = (time - prevTime) / (nextTime - prevTime);
     return {
@@ -123,7 +123,7 @@ export class WeatherData {
     };
   }
 
-  private parseDatum(datum: any): WeatherDatum {
+  private parseDatum(datum: any): IWeatherDatum {
     return {
       date: new Date(datum.dt * 1000),
       weather: datum.weather[0].main,

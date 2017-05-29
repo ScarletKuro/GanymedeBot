@@ -79,7 +79,6 @@ export default class Help extends Command<Client>
 
             embed.setColor(11854048).setDescription(output);
 
-            let outMessage: Message;
             if (!dm && !this.client.selfbot) {
                 if (!command) {
                      message.reply(`Sent you a DM with a list of commands.`);
@@ -87,18 +86,14 @@ export default class Help extends Command<Client>
             }
             if (!command){
                 if (this.client.selfbot) {
-                    outMessage = <Message> await message.channel.send({ embed });
+                    message.channel.send({ embed });
                 }
                 else{
                     message.author.send({ embed });
                 }
             }
             else{
-                 outMessage = <Message> await message.channel.send({ embed });
-            }
-
-            if (outMessage) {
-                outMessage.delete(30e3);
+                 message.channel.send({ embed });
             }
         }
     }

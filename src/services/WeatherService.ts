@@ -1,5 +1,6 @@
 import * as request from 'request-promise';
-import { IWeatherDatum } from '../model/OpenWeatherModel';
+import * as moment from 'moment';
+import { IWeatherDatum, DayState } from '../model/OpenWeatherModel';
 import { pollTimeData, TimeData } from './TimeService';
 
 const API_KEY: string = '42cd627dd60debf25a5739e50a217d74';
@@ -38,6 +39,11 @@ export async function pollWeatherData(cityName: String): Promise<WeatherData> {
       let weatherData: WeatherData = new WeatherData(jsons[0], jsons[1]);
       let timeData: TimeData = await pollTimeData(weatherData.coord.lat, weatherData.coord.lon);
       weatherData.currenTime = timeData.time;
+      let isDay: boolean = (weatherData.sunriseTime < weatherData.currenTime && weatherData.sunsetTime > weatherData.currenTime);
+      weatherData.dayState = isDay ? DayState.Day : DayState.Night;
+      console.log(moment.utc(weatherData.sunriseTime).format('HH:mm'));
+      console.log(moment.utc(weatherData.sunsetTime).format('HH:mm'));
+      console.log(isDay);
       return Promise.resolve(weatherData);
     });
 }
@@ -73,18 +79,21 @@ export class WeatherData {
   public sunriseTime: Date;
   public sunsetTime: Date;
   public currenTime: Date;
+  public dayState: DayState;
   public coord: { lon: number, lat: number };
 
   public constructor(current: any, forecast: any) {
-    this.currenTime = new Date(current.dt * 1000);
+    this.currenTime = moment.utc(current.dt * 1000).toDate();
     this.coord = { lon: current.coord.lon, lat: current.coord.lat };
     this.cityName = forecast.city.name;
     this.countryName = forecast.city.country;
-    this.sunriseTime = new Date(current.sys.sunrise * 1000);
-    this.sunsetTime = new Date(current.sys.sunset * 1000);
+    this.sunriseTime = moment.utc(current.sys.sunrise * 1000).toDate();
+    this.sunsetTime = moment.utc(current.sys.sunset * 1000).toDate();
     this.list = [this.parseDatum(current)].concat(forecast.list.map(this.parseDatum));
     this.days = [];
     let day: any = this.list[0].date.getDate();
+    let isDay: boolean = (this.sunriseTime < this.currenTime && this.sunsetTime > this.currenTime);
+    this.dayState = isDay ? DayState.Day : DayState.Night;
     let matchDay: any = (datum: any): boolean => datum.date.getDate() === day;
     while (this.list.some(matchDay)) {
       this.days.push(this.list.filter(matchDay));
@@ -125,7 +134,7 @@ export class WeatherData {
 
   private parseDatum(datum: any): IWeatherDatum {
     return {
-      date: new Date(datum.dt * 1000),
+      date: moment.utc(datum.dt * 1000).toDate(),
       weather: datum.weather[0].main,
       weatherDetailed: datum.weather[0].description,
       weatherIcon: datum.weather[0].icon,

@@ -4,12 +4,13 @@ import { WeatherData } from '../services/WeatherService';
 import { CanvasTable } from './CanvasTable';
 import { getCountryName } from '../data/CountryISO';
 import { CanvasClock } from './CanvasClock';
-import { IWeatherDatum } from '../model/OpenWeatherModel';
+import { IWeatherDatum, DayState } from '../model/OpenWeatherModel';
 
 const Canvas: any = require('canvas');
 const Image: any = Canvas.Image;
 const DAY_NAMES: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const BACKGROUND_COLOR: string = 'rgb(1, 176, 241)';
+const BACKGROUND_COLOR_DAY: string = 'rgb(1, 176, 241)';
+const BACKGROUND_COLOR_NIGHT: string = 'rgb(102, 102, 255)';
 const TIMELINE_BACKGROUND_COLOR: string = 'rgb(255, 255, 255)';
 const MAIN_FONT_COLOR: string = 'rgb(255, 255, 255)';
 const TIMELINE_FONT_COLOR: string = 'rgb(0, 0, 0)';
@@ -45,9 +46,9 @@ export default class DrawWeather {
 
     public drawClock(ctx: any): void {
         let hhmmgapsize: number = 6;
-        let offset: {x: number, y: number } = { x: 10, y: 10 };
+        let offset: { x: number, y: number } = { x: 10, y: 10 };
         let size: { width: number, height: number } = { width: 26.25, height: 45 };
-        let pos: { x: number, y: number } = { x: this.width - size. width * 4 - offset.y - hhmmgapsize, y: 0 + offset.x };
+        let pos: { x: number, y: number } = { x: this.width - size.width * 4 - offset.y - hhmmgapsize, y: 0 + offset.x };
         const clock: CanvasClock = new CanvasClock(this.data.currenTime, ctx, size.width, size.height, hhmmgapsize);
         clock.draw(pos.x, pos.y);
     }
@@ -76,7 +77,12 @@ export default class DrawWeather {
         // const backgroundImage: { src: any } = new Image();
         // backgroundImage.src = await this.loadAsset('base', 'cloudy.png');
         // ctx.drawImage(backgroundImage, 0, 0);
-        ctx.fillStyle = BACKGROUND_COLOR;
+        if (this.data.dayState === DayState.Day) {
+            ctx.fillStyle = BACKGROUND_COLOR_DAY;
+        }
+        else {
+            ctx.fillStyle = BACKGROUND_COLOR_NIGHT;
+        }
         ctx.fillRect(0, 0, this.width, this.height);
         // ctx.scale(1, 1);
         // ctx.patternQuality = 'billinear';
@@ -101,26 +107,26 @@ export default class DrawWeather {
 
         ctx.font = '14px Goulong';
         ctx.fillStyle = TIMELINE_FONT_COLOR;
-        ctx.fillText(`${this.getDay(this.currentWeather.date)}  ${this.getOridnal(this.currentWeather.date.getUTCDate())}` , 20, this.height / 1.5 + 55);
+        ctx.fillText(`${this.getDay(this.currentWeather.date)}  ${this.getOridnal(this.currentWeather.date.getUTCDate())}`, 20, this.height / 1.5 + 55);
 
         ctx.font = '15px Goulong';
         ctx.fillStyle = MAIN_FONT_COLOR;
         ctx.fillText(getCountryName(this.currentWeather.weatherDetailed), 10, this.height / 1.5 - 10);
     }
 
-    private drawDetails(ctx: any): void{
+    private drawDetails(ctx: any): void {
         const humid: { src: Buffer } = new Image();
-		const precip: { src: Buffer } = new Image();
+        const precip: { src: Buffer } = new Image();
         humid.src = this.loadAsset('icons', 'humidity.png');
         precip.src = this.loadAsset('icons', 'precip.png');
-        
+
         ctx.drawImage(humid, 380, 80);
-		ctx.drawImage(precip, 380, 100);
-		ctx.font = '15px Goulong';
+        ctx.drawImage(precip, 380, 100);
+        ctx.font = '15px Goulong';
         ctx.textAlign = 'right';
         ctx.fillStyle = MAIN_FONT_COLOR;
-		ctx.fillText(`${this.currentWeather.humidity}%`, 378, 80 + 11);
-		ctx.fillText(`${this.currentWeather.rain}`, 378, 100 + 11);
+        ctx.fillText(`${this.currentWeather.humidity}%`, 378, 80 + 11);
+        ctx.fillText(`${this.currentWeather.rain}`, 378, 100 + 11);
     }
 
     private wrapText(context: any, text: string, marginLeft: number, marginTop: number, maxWidth: number, lineHeight: number): void {
@@ -153,7 +159,7 @@ export default class DrawWeather {
     private getOridnal(d: number): string {
         const nth: any = { '1': 'st', '2': 'nd', '3': 'rd' };
         return `${d}${nth[d] || 'th'}`;
-    } 
+    }
 
     private loadFont(family: string, ...font: string[]): void {
         let paths: string[] = [__dirname];

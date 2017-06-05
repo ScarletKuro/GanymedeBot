@@ -1,7 +1,9 @@
 import * as request from 'request-promise';
+import * as moment from 'moment';
 import { ITimezonedbModel } from '../model/TimezonedbModel';
 import { ApiException } from '../model/ApiException';
 import { StatusCodeError } from 'request-promise/errors';
+
 const TIMEOUT: number = 2000;
 const TOO_MANY_REQUESTS: number = 503;
 const API_KEY: string = 'HH85TY131SR3';
@@ -75,7 +77,6 @@ function fetchWithBackoff(options: any, waitTime?: number): Promise<ITimezonedbM
 export class TimeData {
     public time: Date;
     public constructor(data: ITimezonedbModel) {
-        let date: Date = new Date(data.timestamp * 1000);
-        this.time = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+        this.time =  moment.utc(data.timestamp * 1000).toDate();
     }
 }

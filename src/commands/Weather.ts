@@ -19,11 +19,11 @@ export default class Weather extends Command<Client>
 
     public async action(message: Message, args: string[]): Promise<any> {
         const location: string = args.join(' ');
-        pollWeatherData(location).then(function (result: WeatherData): Promise<Message> {
+        pollWeatherData(location).then((result: WeatherData): Promise<Message> => {
             const graph: DrawWeather = new DrawWeather(result, 400, 180);
             graph.draw();
             return message.channel.send({ files: [{ attachment: graph.canvas.toBuffer(), name: location.concat('.png') }] });
-        }).catch(function (ex: Error): Promise<Message> {
+        }).catch((ex: Error): Promise<Message> => {
             let embed: RichEmbed = new RichEmbed();
             embed
                 .setColor(0xff0000)

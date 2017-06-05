@@ -1,9 +1,10 @@
-import { Client, ListenerUtil, LogLevel } from 'yamdbf';
+import { Client, ListenerUtil, LogLevel, Message } from 'yamdbf';
+import { GuildMember, RichEmbed, TextChannel } from 'discord.js';
 
 const config: any = require('../../config.json');
 const pkg: any = require('../../package.json');
 
-const { once } = ListenerUtil;
+const { once, on } = ListenerUtil;
 
 export class Ganymede extends  Client {
 
@@ -36,5 +37,19 @@ export class Ganymede extends  Client {
     @once('clientReady')
     private async _onClientReady(): Promise<void> {
         
+    }
+
+    @on('guildMemberAdd')
+    @on('guildMemberRemove', false)
+    private _logMember(member: GuildMember, joined: boolean = true): Promise<Message>
+    {
+        const memberLog: TextChannel = <TextChannel> member.guild.defaultChannel;
+        const embed: RichEmbed = new RichEmbed()
+			.setColor(joined ? 8450847 : 16039746)
+			.setAuthor(`${member.user.tag} (${member.id})`, member.user.avatarURL)
+			.setFooter(joined ? 'User joined' : 'User left' , '')
+        .setTimestamp();
+        
+        return memberLog.send({embed: embed});
     }
 }

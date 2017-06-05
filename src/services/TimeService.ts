@@ -8,7 +8,7 @@ const TIMEOUT: number = 2000;
 const TOO_MANY_REQUESTS: number = 503;
 const API_KEY: string = 'HH85TY131SR3';
 
-export function pollTimeData(lat: number, lng: number): Promise<TimeData> {
+export async function pollTimeData(lat: number, lng: number): Promise<TimeData> {
     if (API_KEY.length === 0) {
         return Promise.reject(new ApiException('TimeZoneDB: API key is not set'));
     }
@@ -28,24 +28,10 @@ export function pollTimeData(lat: number, lng: number): Promise<TimeData> {
         }
     });
 
-    let timePromise: Promise<ITimezonedbModel> = fetchWithBackoff(timeOption);
-    return Promise.all([timePromise]).then(jsons => Promise.resolve(new TimeData(jsons[0])));
-
-    /*
-    let timePromise: request.RequestPromise = request({
-        method: 'GET',
-        uri: timeUrl,
-        json: true,
-        qs: {
-            key: API_KEY,
-            format: 'json',
-            by: 'position',
-            lat: lat,
-            lng: lng
-        }
-    });
-    
-    return Promise.all([timePromise]).then(jsons => Promise.resolve(new TimeData(jsons[0])));*/
+    let json: ITimezonedbModel = await fetchWithBackoff(timeOption);
+    return Promise.resolve(new TimeData(json));
+    //let timePromise: Promise<ITimezonedbModel> = fetchWithBackoff(timeOption);
+    //return Promise.all([timePromise]).then(jsons => Promise.resolve(new TimeData(jsons[0])));
 }
 
 function fetchWithBackoff(options: any, waitTime?: number): Promise<ITimezonedbModel> {
@@ -54,15 +40,15 @@ function fetchWithBackoff(options: any, waitTime?: number): Promise<ITimezonedbM
             reject(new ApiException('TimeZoneDB: Timeout fetching data'));
         }
         setTimeout(() => {
-            request(options).then(function (response: ITimezonedbModel): void {
+            request(options).then((response: ITimezonedbModel): void => {
                     if (response.status === 'OK') {
                         resolve(response);
                     }
                     else {
                         reject(new ApiException(`TimeZoneDB: ${response.message}`));
                     }
-            })
-                .catch(function (error: StatusCodeError): void {
+                })
+                .catch((error: StatusCodeError): void => {
                     if (error.statusCode === TOO_MANY_REQUESTS) {
                         resolve(fetchWithBackoff(options, waitTime ? (2 * waitTime) : 50));
                     }

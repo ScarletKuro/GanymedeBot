@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as moment from 'moment';
 
 const Canvas: any = require('canvas');
 const Image: any = Canvas.Image;
@@ -40,17 +41,13 @@ export class CanvasClock {
         this.context.save();
         this.context.setTransform(1, 0, 0, 1, x, y);
 
-        let timestring: any = this.pad2(this.time.getHours()) + this.pad2(this.time.getMinutes());
+        const timestring: string = moment.utc(this.time).format('HHmm');
 
         for (let iDigit: number = 0; iDigit < 4; iDigit++) {
             this.drawHHMMDigit(timestring, iDigit);
         }
 
         this.context.restore();
-    }
-
-    private pad2(num: number): any {
-        return (num < 10 ? '0' : '') + num;
     }
 
     private loadAsset(...asset: string[]): Buffer {

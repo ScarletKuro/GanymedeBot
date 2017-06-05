@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "request-promise": "^4.2.1",
+    "moment": "*",
     "request": "^2.81.0",
     "yamdbf": "github:zajrik/yamdbf",
     "canvas": "automattic/node-canvas",

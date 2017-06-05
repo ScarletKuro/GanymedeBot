@@ -12,3 +12,7 @@ export interface IWeatherDatum {
   rain: number; // volume last 3h in mm
   snow: number; // volume last 3h
 }
+export enum DayState{
+    Night = 0,
+    Day = 1
+}

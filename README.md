@@ -1,7 +1,7 @@
 ﻿# GanymedeBot
  
-A discord bot.
+A discord bot was writing together with friend.
 Using discord.js, yamdbf framework, canvas
-the bot can show feather
+the bot can show feather.
 ![ScreenShot](https://i.imgur.com/gbWdFTP.png)
 
